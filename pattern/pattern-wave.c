@@ -44,18 +44,20 @@ stereo_pattern_wave_overlay_do(WaveData *data, int start, int end, int gstart,
 
     /* Iterate over all our assigned pixels */
     for (y = start; y < end; y++) {
+        int z = (y * data->pattern->width) / data->pattern->height;
+
         for (x = 0; x < data->pattern->width; x++) {
             int i;
             int v = 0;
 
             /* Add all waves together */
             for (i = 0; i < data->wave_count; i++) {
-                v += unmkfix(unmkfix(mul(data->strengths[i],
+                v += mul(data->strengths[i],
                     data->sin[
                         (data->offsets[i] + x * (i + 1)) % data->pattern->width]
                     + data->sin[
-                        (data->offsets[i] + y * (i + 1)) % data->pattern->width]
-                    )));
+                        (data->offsets[i] + z * (i + 1)) % data->pattern->width]
+                    );
             }
 
             /* Apply the value change */
@@ -90,7 +92,7 @@ stereo_pattern_wave_overlay(StereoPattern *pattern, unsigned int wave_count,
     /* Initialise the strengths */
     data.strengths = alloca(wave_count * sizeof(data.strengths[0]));
     for (i = 0; i < wave_count; i++) {
-        data.strengths[i] = (int)(1024 * strengths[i]);
+        data.strengths[i] = (int)(LIM * strengths[i]);
     }
 
     data.components = components;
@@ -98,13 +100,13 @@ stereo_pattern_wave_overlay(StereoPattern *pattern, unsigned int wave_count,
     /* Initialise the random offsets */
     data.offsets = alloca(wave_count * sizeof(data.offsets[0]));
     for (i = 0; i < wave_count; i++) {
-        data.offsets[i] = mkfix(rand()) / RAND_MAX;
+        data.offsets[i] = rand();
     }
 
     /* Initialise the sine table */
     data.sin = alloca(pattern->width * sizeof(int));
     for (i = 0; i < pattern->width; i++) {
-        data.sin[i] = (int)(1024
+        data.sin[i] = (int)(LIM
             * sin(2 * M_PI * (double)(i + 1) / pattern->width));
     }
 
