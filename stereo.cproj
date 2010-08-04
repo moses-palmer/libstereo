@@ -49,6 +49,7 @@
     <None Include="pattern.h" />
     <None Include="private.h" />
     <None Include="para.h" />
+    <None Include="stereo.h" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="para-linux.c" />
