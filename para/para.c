@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include "para.h"
+#include "../para.h"
 
 /*
  * The cached value for the thread count.
