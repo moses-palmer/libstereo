@@ -50,13 +50,15 @@
     <None Include="private.h" />
     <None Include="para.h" />
     <None Include="stereo.h" />
+    <None Include="effect.h" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="para-linux.c" />
     <Compile Include="para.c" />
     <Compile Include="pattern\pattern.c" />
-    <Compile Include="pattern\pattern-wave.c" />
     <Compile Include="pattern\pattern-png.c" />
+    <Compile Include="effect\wave.c" />
+    <Compile Include="effect\effect.c" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
@@ -70,5 +72,6 @@
   </ProjectExtensions>
   <ItemGroup>
     <Folder Include="pattern\" />
+    <Folder Include="effect\" />
   </ItemGroup>
 </Project>

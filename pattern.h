@@ -1,5 +1,5 @@
-#ifndef STEREO_H
-#define STEREO_H
+#ifndef STEREO_PATTERN_H
+#define STEREO_PATTERN_H
 
 #include <stdio.h>
 
@@ -69,21 +69,5 @@ stereo_pattern_create_from_png(FILE *in);
  */
 int
 stereo_pattern_save_to_png(StereoPattern *pattern, FILE *out);
-
-/**
- * Overlays a luminance wave over the pattern.
- *
- * wave_count is the number of waves to use. The time complexity grows linearly
- * to this value. The wave length of a wave is the dimension of the image
- * divided by the wave index.
- *
- * strengths is the strength of every wave.
- *
- * components is  components flags. Only pixel components in the components are
- * modified.
- */
-void
-stereo_pattern_wave_overlay(StereoPattern *pattern, unsigned int wave_count,
-    double *strengths, int components);
 
 #endif
