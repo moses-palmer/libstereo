@@ -8,9 +8,26 @@ struct StereoPatternEffect {
     /* The target pattern */
     StereoPattern *pattern;
 
+    /**
+     * Applies the effect to the specified rows.
+     */
     void (*Apply)(StereoPatternEffect *effect, int start, int end, int gstart,
         int gend);
 
+    /**
+     * Updates the internal state of the effect.
+     *
+     * This is called every time stereo_pattern_effet_apply is called, after
+     * the calls to StereoPatternEffect::Apply.
+     */
+    void (*Update)(StereoPatternEffect *effect);
+
+    /**
+     * Releases the resources used by the effect. This may be NULL.
+     *
+     * This is called by stereo_pattern_effect_free is non-NULL. After the call
+     * to this function, free is called on the effect pointer.
+     */
     void (*Release)(StereoPatternEffect *effect);
 };
 
