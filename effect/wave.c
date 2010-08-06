@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "../effect.h"
-#include "../para.h"
 #include "../private.h"
 
 /*
