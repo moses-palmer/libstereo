@@ -2,6 +2,7 @@
 #include <png.h>
 #include <setjmp.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <errno.h>
 
@@ -14,7 +15,9 @@ stereo_pattern_create_from_png(FILE *in)
     unsigned char signature[8];
     png_structp png;
     png_infop info, end;
+    png_bytep *rows = NULL;
     StereoPattern *result;
+    int i, x, y;
 
     result = NULL;
 
@@ -51,12 +54,58 @@ stereo_pattern_create_from_png(FILE *in)
     /* Initialise the PNG struct to use in as input stream */
     png_init_io(png, in);
 
-    /* Read the PNG file */
+    /* Read the PNG and get the pixel data */
     png_read_png(png, info,
         PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_PACKING,
         NULL);
+    rows = png_get_rows(png, info);
+    result = stereo_pattern_create(info->width, info->height);
 
-    /* TODO: Complete */
+    /* Convert pixel data */
+    for (y = 0; y < result->height; y++) {
+        unsigned char *s = rows[y];
+        PatternPixel *d = &result->pixels[y * result->width];
+
+        for (x = 0; x < result->width; x++) {
+            switch (info->color_type) {
+            case PNG_COLOR_TYPE_GRAY:
+                d->r = s[0];
+                d->g = s[0];
+                d->b = s[0];
+                d->a = 255;
+                break;
+
+            case PNG_COLOR_TYPE_RGB:
+                d->r = s[0];
+                d->g = s[1];
+                d->b = s[2];
+                d->a = 255;
+                break;
+
+            case PNG_COLOR_TYPE_RGBA:
+                d->r = s[0];
+                d->g = s[1];
+                d->b = s[2];
+                d->a = s[3];
+                break;
+
+            case PNG_COLOR_TYPE_GA:
+                d->r = s[0];
+                d->g = s[0];
+                d->b = s[0];
+                d->a = s[1];
+                break;
+            }
+
+            s += info->channels;
+            d++;
+        }
+    }
+
+    /* Free PNG */
+    png_destroy_read_struct(&png, &info, png_infopp_NULL);
+
+    return result;
 }
 
 int
