@@ -22,12 +22,15 @@ stereo_image_create(unsigned int width, unsigned int height,
     StereoPattern *pattern);
 
 /*
- * Applies a Z-buffer to the stereo image, creating an actual stereogram.
+ * Applies a Z-buffer to the stereo image, creating an actual stereogram. Only
+ * the alpha channel of the Z-buffer is used.
+ *
+ * depth is the multiplicator for depths.
  *
  * The result is non-zero upon success, or 0 if the dimensions of the buffer do
  * not match the dimensions of the stereo image.
  */
 int
-stereo_image_apply(StereoImage *image, StereoPattern *zbuffer);
+stereo_image_apply(StereoImage *image, StereoPattern *zbuffer, double depth);
 
 #endif

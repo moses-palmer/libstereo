@@ -66,7 +66,7 @@ stereo_pattern_effect_free(StereoPatternEffect *effect);
  * color_components is a bit mask of the colour components to affect.
  */
 StereoPatternEffect*
-stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
+stereo_pattern_effect_luminance(StereoPattern *pattern, unsigned int wave_count,
     double *strengths, int color_components);
 
 #endif

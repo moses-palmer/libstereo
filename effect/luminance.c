@@ -5,7 +5,7 @@
 #include "../private.h"
 
 /*
- * Effect data for a wave.
+ * Effect data for a luminance effect.
  */
 typedef struct {
     StereoPatternEffect b;
@@ -25,13 +25,13 @@ typedef struct {
     /* The sine lookup table; its element count is equal to the width of the
        pattern */
     int *sin;
-} WaveEffect;
+} LuminanceEffect;
 
 /**
  * See StereoPatternEffect::Apply.
  */
 static void
-wave_apply(WaveEffect *effect, int start, int end, int gstart,
+luminance_apply(LuminanceEffect *effect, int start, int end, int gstart,
     int gend)
 {
     int x, y;
@@ -81,7 +81,7 @@ wave_apply(WaveEffect *effect, int start, int end, int gstart,
  * See StereoPatternEffect::Update.
  */
 static void
-wave_update(WaveEffect *effect)
+luminance_update(LuminanceEffect *effect)
 {
     /* Do nothing */
 }
@@ -90,7 +90,7 @@ wave_update(WaveEffect *effect)
  * See StereoPatternEffect::Release.
  */
 static void
-wave_release(WaveEffect *effect)
+luminance_release(LuminanceEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);
@@ -98,17 +98,17 @@ wave_release(WaveEffect *effect)
 }
 
 StereoPatternEffect*
-stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
+stereo_pattern_effect_luminance(StereoPattern *pattern, unsigned int wave_count,
     double *strengths, int components)
 {
-    WaveEffect *result = malloc(sizeof(WaveEffect));
+    LuminanceEffect *result = malloc(sizeof(LuminanceEffect));
     int i;
 
     /* Initialise the basic effect data */
     result->b.pattern = pattern;
-    result->b.Apply = (void*)wave_apply;
-    result->b.Update = (void*)wave_update;
-    result->b.Release = (void*)wave_release;
+    result->b.Apply = (void*)luminance_apply;
+    result->b.Update = (void*)luminance_update;
+    result->b.Release = (void*)luminance_release;
 
     result->wave_count = wave_count;
 

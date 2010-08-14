@@ -10,7 +10,7 @@
 /*
  * The number of bits reserved for the decimals.
  */
-#define DBITS 5
+#define DBITS 16
 
 /*
  * lim x, x -> 1.

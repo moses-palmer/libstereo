@@ -55,10 +55,11 @@
   <ItemGroup>
     <Compile Include="pattern\pattern.c" />
     <Compile Include="pattern\pattern-png.c" />
-    <Compile Include="effect\wave.c" />
     <Compile Include="effect\effect.c" />
     <Compile Include="para\para.c" />
     <Compile Include="para\para-linux.c" />
+    <Compile Include="stereo.c" />
+    <Compile Include="effect\luminance.c" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
