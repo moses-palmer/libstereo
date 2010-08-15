@@ -65,4 +65,13 @@ mul(int c, int v) {
     return unmkfix(c * v);
 }
 
+/*
+ * Returns the fractional part of c.
+ */
+static inline int
+getfrac(int c)
+{
+    return c & LIM;
+}
+
 #endif

@@ -36,6 +36,18 @@ typedef struct {
     PatternPixel pixels[0];
 } StereoPattern;
 
+/*
+ * Returns a reference to the y'th pattern pixel row.
+ */
+#define stereo_pattern_row_get(pattern, y) \
+    (&(pattern)->pixels[y * (pattern)->width])
+
+/*
+ * Returns a reference to the pattern pixel at (x, y).
+ */
+#define stereo_pattern_pixel_get(pattern, x, y) \
+    (&(pattern)->pixels[y * (pattern)->width + x])
+
 /**
  * Creates a pattern with the specified dimensions.
  *

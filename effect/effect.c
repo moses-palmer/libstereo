@@ -14,9 +14,5 @@ stereo_pattern_effect_apply(StereoPatternEffect *effect)
 void
 stereo_pattern_effect_free(StereoPatternEffect *effect)
 {
-    if (effect->Release) {
-        effect->Release(effect);
-    }
-
-    free(effect);
+    effect->Release(effect);
 }

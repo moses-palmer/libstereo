@@ -39,7 +39,7 @@ luminance_apply(LuminanceEffect *effect, int start, int end, int gstart,
     PatternPixel *d;
 
     /* Initialise a pointer to the first pixel */
-    d = &pattern->pixels[start * pattern->width];
+    d = stereo_pattern_row_get(pattern, start);
 
     /* Iterate over all our assigned pixels */
     for (y = start; y < end; y++) {
@@ -95,6 +95,7 @@ luminance_release(LuminanceEffect *effect)
     free(effect->strengths);
     free(effect->offsets);
     free(effect->sin);
+    free(effect);
 }
 
 StereoPatternEffect*

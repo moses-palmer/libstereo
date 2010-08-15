@@ -23,10 +23,7 @@ struct StereoPatternEffect {
     void (*Update)(StereoPatternEffect *effect);
 
     /**
-     * Releases the resources used by the effect. This may be NULL.
-     *
-     * This is called by stereo_pattern_effect_free is non-NULL. After the call
-     * to this function, free is called on the effect pointer.
+     * Releases the resources used by the effect.
      */
     void (*Release)(StereoPatternEffect *effect);
 };

@@ -64,7 +64,7 @@ stereo_pattern_create_from_png(FILE *in)
     /* Convert pixel data */
     for (y = 0; y < result->height; y++) {
         unsigned char *s = rows[y];
-        PatternPixel *d = &result->pixels[y * result->width];
+        PatternPixel *d = stereo_pattern_row_get(result, y);
 
         for (x = 0; x < result->width; x++) {
             switch (info->color_type) {
