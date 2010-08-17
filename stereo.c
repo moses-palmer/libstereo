@@ -75,7 +75,6 @@ blend(PatternPixel *pixel, PatternPixel *row, int x, unsigned int width)
     pixel->g = unmkfix(mul(mkfix(p1->g), a1) + mul(mkfix(p2->g), a2));
     pixel->b = unmkfix(mul(mkfix(p1->b), a1) + mul(mkfix(p2->b), a2));
     pixel->a = unmkfix(mul(mkfix(p1->a), a1) + mul(mkfix(p2->a), a2));
-    //memcpy(pixel, p1, sizeof(PatternPixel));
 }
 
 static int
@@ -144,7 +143,7 @@ stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
 
     /* Create the table of offsets */
     for (i = 0; i < sizeof(data.offsets); i++) {
-        data.offsets[i] = mkfix((int)(depth * (sizeof(data.offsets) - i)));
+        data.offsets[i] = (int)(depth * mkfix(sizeof(data.offsets) - i));
     }
 
     para_execute(&data, start, end,
