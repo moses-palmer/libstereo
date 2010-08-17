@@ -2,35 +2,7 @@
 #define STEREO_H
 
 #include "pattern.h"
-
-typedef struct {
-    /* The width of the z-buffer */
-    unsigned int width;
-
-    /* The height of the z-buffer */
-    unsigned int height;
-
-    /* The relative offset between one row and the next */
-    int rowoffset;
-
-    /* The number of channels for every buffer element */
-    unsigned int channels;
-
-    /* The actual buffer data */
-    unsigned char *data;
-} ZBuffer;
-
-/*
- * Returns a reference to the y'th row.
- */
-#define stereo_zbuffer_row_get(buffer, y) \
-    (&(buffer)->data[y * (buffer)->rowoffset])
-
-/*
- * Returns a reference to the pixel at (x, y).
- */
-#define stereo_zbuffer_pixel_get(buffer, x, y) \
-    (&(buffer)->data[y * (buffer)->rowoffset + x * (buffer)->channels])
+#include "zbuffer.h"
 
 typedef struct {
     /* The actual image data */
@@ -49,6 +21,12 @@ typedef struct {
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
     StereoPattern *pattern);
+
+/*
+ * Frees a stereo image and its pattern.
+ */
+void
+stereo_image_free(StereoImage *image);
 
 /**
  * Applies a z-buffer to the stereo image, creating an actual stereogram.

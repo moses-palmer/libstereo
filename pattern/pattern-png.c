@@ -108,6 +108,21 @@ stereo_pattern_create_from_png(FILE *in)
     return result;
 }
 
+StereoPattern*
+stereo_pattern_create_from_png_file(const char *filename)
+{
+    FILE *in = fopen(filename, "rb");
+    StereoPattern* result = NULL;
+
+    if (in) {
+        result = stereo_pattern_create_from_png(in);
+        fclose(in);
+    }
+
+    return result;
+
+}
+
 int
 stereo_pattern_save_to_png(StereoPattern *pattern, FILE *out)
 {
@@ -149,4 +164,18 @@ stereo_pattern_save_to_png(StereoPattern *pattern, FILE *out)
     png_destroy_write_struct(&png, &info);
 
     return 1;
+}
+
+int
+stereo_pattern_save_to_png_file(StereoPattern *pattern, const char *filename)
+{
+    FILE *out = fopen(filename, "wb");
+    int result = 0;
+
+    if (out) {
+        result = stereo_pattern_save_to_png(pattern, out);
+        fclose(out);
+    }
+
+    return result;
 }

@@ -10,7 +10,7 @@
 /*
  * The number of bits reserved for the decimals.
  */
-#define DBITS 16
+#define DBITS 12
 
 /*
  * lim x, x -> 1.
@@ -72,6 +72,15 @@ static inline int
 getfrac(int c)
 {
     return c & LIM;
+}
+
+/*
+ * Inverts the fractional part of c.
+ */
+static inline int
+ifrac(int c)
+{
+    return c ^ LIM;
 }
 
 #endif

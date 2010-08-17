@@ -51,6 +51,7 @@
     <None Include="para.h" />
     <None Include="stereo.h" />
     <None Include="effect.h" />
+    <None Include="zbuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="pattern\pattern.c" />
@@ -60,6 +61,7 @@
     <Compile Include="para\para-linux.c" />
     <Compile Include="stereo.c" />
     <Compile Include="effect\luminance.c" />
+    <Compile Include="zbuffer\zbuffer.c" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
@@ -75,5 +77,6 @@
     <Folder Include="pattern\" />
     <Folder Include="effect\" />
     <Folder Include="para\" />
+    <Folder Include="zbuffer\" />
   </ItemGroup>
 </Project>

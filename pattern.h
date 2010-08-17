@@ -74,6 +74,14 @@ StereoPattern*
 stereo_pattern_create_from_png(FILE *in);
 
 /*
+ * Creates a pattern from a PNG file.
+ *
+ * See stereo_pattern_create_from_png.
+ */
+StereoPattern*
+stereo_pattern_create_from_png_file(const char *filename);
+
+/*
  * Saves the pattern to a file in PNG format. The return value is 0 if an error
  * occurs, and non-zero otherwise.
  *
@@ -81,5 +89,13 @@ stereo_pattern_create_from_png(FILE *in);
  */
 int
 stereo_pattern_save_to_png(StereoPattern *pattern, FILE *out);
+
+/*
+ * Saves the pattern to a file in PNG format.
+ *
+ * See stereo_pattern_save_to_png.
+ */
+int
+stereo_pattern_save_to_png_file(StereoPattern *pattern, const char *filename);
 
 #endif
