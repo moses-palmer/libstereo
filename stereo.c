@@ -8,9 +8,10 @@
 
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
-    StereoPattern *pattern)
+    StereoPattern *pattern, double depth)
 {
     StereoImage *result;
+    int i;
 
     if (!pattern) {
         return NULL;
@@ -19,6 +20,12 @@ stereo_image_create(unsigned int width, unsigned int height,
     result = malloc(sizeof(StereoImage));
     result->image = stereo_pattern_create(width, height);
     result->pattern = pattern;
+
+    /* Create the table of offsets */
+    for (i = 0; i < sizeof(result->offsets) / sizeof(result->offsets[0]); i++) {
+        result->offsets[i] = (int)(depth * mkfix(
+            (sizeof(result->offsets) / sizeof(result->offsets[0])) - i));
+    }
 
     return result;
 }
@@ -36,9 +43,6 @@ typedef struct {
     StereoImage *image;
     ZBuffer *buffer;
     unsigned int channel;
-
-    /* The calculated offsets depth values from the buffer will yield */
-    int offsets[256];
 } StereoImageApplyData;
 
 /*
@@ -93,12 +97,12 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
             y % image->pattern->height);
 
         for (x = 0; x < image->image->width; x++) {
-            int offset = data->offsets[*z];
-            int sourcex = mkfix(x) - offset;
+            int offset = data->image->offsets[*z];
+            int sourcex = mkfix(x - image->pattern->width) - offset;
             PatternPixel *row;
             unsigned int width;
 
-            if (sourcex < 0) {
+            if (!offset || sourcex < 0) {
                 row = pattern_row;
                 width = image->pattern->width;
             }
@@ -116,10 +120,9 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
 
 int
 stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
-    unsigned int channel, double depth, unsigned int start, unsigned int end)
+    unsigned int channel, unsigned int start, unsigned int end)
 {
     StereoImageApplyData data;
-    int i;
 
     /* Verify the dimensions of the Z-buffer */
     if (image->image->width != buffer->width
@@ -140,11 +143,6 @@ stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
     data.image = image;
     data.buffer = buffer;
     data.channel = channel;
-
-    /* Create the table of offsets */
-    for (i = 0; i < sizeof(data.offsets); i++) {
-        data.offsets[i] = (int)(depth * mkfix(sizeof(data.offsets) - i));
-    }
 
     para_execute(&data, start, end,
         (ParaCallback)stereo_image_apply_lines_do);
