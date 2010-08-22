@@ -66,4 +66,22 @@ StereoPatternEffect*
 stereo_pattern_effect_luminance(StereoPattern *pattern, unsigned int wave_count,
     double *strengths, int color_components);
 
+/*
+ * Renders a distorted copy of source on pattern. Every time the effect is
+ * applied, the waves move slighty.
+ *
+ * wave_count is the number of waves to use. The time complexity grows linearly
+ * to this value. The wave length of a wave is the dimension of the image
+ * divided by the wave index.
+ *
+ * strengths is the strength of every wave. It must contain wave_count
+ * element pairs. Every pair is the horizontal strength followed by the vertical
+ * strength.
+ *
+ * source is the pattern copied.
+ */
+StereoPatternEffect*
+stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
+    double *strengths, StereoPattern *source);
+
 #endif

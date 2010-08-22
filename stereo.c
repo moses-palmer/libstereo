@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "private.h"
+#include "private/fix.h"
+#include "private/pixel.h"
 
 #include "para.h"
 #include "stereo.h"

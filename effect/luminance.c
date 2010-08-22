@@ -1,8 +1,9 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "../private/fix.h"
+
 #include "../effect.h"
-#include "../private.h"
 
 /*
  * Effect data for a luminance effect.
