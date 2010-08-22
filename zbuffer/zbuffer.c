@@ -1,7 +1,5 @@
 #include <stdlib.h>
 
-#include "../private.h"
-
 #include "../zbuffer.h"
 
 ZBuffer*

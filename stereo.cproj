@@ -47,12 +47,12 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="pattern.h" />
-    <None Include="para.h" />
     <None Include="stereo.h" />
     <None Include="effect.h" />
     <None Include="zbuffer.h" />
     <None Include="private\fix.h" />
     <None Include="private\pixel.h" />
+    <None Include="para\para.h" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="pattern\pattern.c" />

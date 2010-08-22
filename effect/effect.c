@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "../effect.h"
-#include "../para.h"
+#include "../para/para.h"
 
 void
 stereo_pattern_effect_apply(StereoPatternEffect *effect)

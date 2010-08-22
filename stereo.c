@@ -4,7 +4,7 @@
 #include "private/fix.h"
 #include "private/pixel.h"
 
-#include "para.h"
+#include "para/para.h"
 #include "stereo.h"
 
 StereoImage*

@@ -7,7 +7,6 @@
 #include <errno.h>
 
 #include "../pattern.h"
-#include "../private.h"
 
 StereoPattern*
 stereo_pattern_create_from_png(FILE *in)
