@@ -5,12 +5,14 @@
 
 #include "fix.h"
 
+#define _MODULUS_UNSIGNED
+
 /*
  * Returns the row at unmkfix(y) and the next row. Rows wrap around.
  */
 static inline void
 getrows(PatternPixel *pixels, int y, PatternPixel **row1,
-    PatternPixel **row2, unsigned int width, unsigned int height)
+    PatternPixel **row2, int width, int height)
 {
     int i = unmkfix(y) % height;
 
@@ -39,37 +41,29 @@ getrows(PatternPixel *pixels, int y, PatternPixel **row1,
  * width is the width of the row.
  */
 static inline void
-blend2(PatternPixel *pixel, PatternPixel *row, int x, unsigned int width)
+blend2(PatternPixel *pixel, PatternPixel *row, int x, int width)
 {
     int x1 = unmkfix(x) % width;
-    int x2 = x1 + 1;
+    int x2;
     int a1, a2;
     PatternPixel *p1, *p2;
-
-    /* Is x1 the last row? */
-    if (x2 == width) {
-        x2 = 0;
-    }
 
 #ifndef MODULUS_UNSIGNED
     /* If modulus is signed, we need to correct for that */
     if (x1 < 0) {
         x1 += width;
     }
-    if (x2 < 0) {
-        x2 += width;
-    }
 #endif
+
+    /* Is x1 the last row? */
+    x2 = x1 + 1;
+    if (x2 == width) {
+        x2 = 0;
+    }
 
     /* a1 is the weight of the left pixel, and a2 the weight of the right one */
     a2 = getfrac(x);
-    if (x < 0) {
-        a1 = a2;
-        a2 = ifrac(a1);
-    }
-    else {
-        a1 = ifrac(a2);
-    }
+    a1 = ifrac(a2);
 
     p1 = &row[x1];
     p2 = &row[x2];
@@ -91,7 +85,7 @@ blend2(PatternPixel *pixel, PatternPixel *row, int x, unsigned int width)
  */
 static inline void
 blend4(PatternPixel *pixel, PatternPixel *row1, PatternPixel *row2, int x,
-    int y, unsigned int width)
+    int y, int width)
 {
     int a1, a2;
     PatternPixel p1, p2;
@@ -102,13 +96,7 @@ blend4(PatternPixel *pixel, PatternPixel *row1, PatternPixel *row2, int x,
     /* a1 is the weight of the top pixel, and a2 the weight of the bottom
        one */
     a2 = getfrac(y);
-    if (y < 0) {
-        a1 = a2;
-        a2 = ifrac(a2);
-    }
-    else {
-        a1 = ifrac(a2);
-    }
+    a1 = ifrac(a2);
 
     /* pixel = a1 * p1 + a2 * p2 */
     pixel->r = unmkfix(mul(mkfix(p1.r), a1) + mul(mkfix(p2.r), a2));

@@ -66,21 +66,21 @@ mul(int c, int v) {
 }
 
 /*
- * Returns the fractional part of c.
- */
-static inline int
-getfrac(int c)
-{
-    return c & LIM;
-}
-
-/*
  * Inverts the fractional part of c.
  */
 static inline int
 ifrac(int c)
 {
     return c ^ LIM;
+}
+
+/*
+ * Returns the fractional part of c. 0 - d will return 1 - d.
+ */
+static inline int
+getfrac(int c)
+{
+    return c & LIM;
 }
 
 #endif

@@ -45,11 +45,12 @@ wave_apply(WaveEffect *effect, int start, int end, int gstart,
 
     /* Iterate over all our assigned pixels */
     for (y = start; y < end; y++) {
-        int z = (y * pattern->width) / pattern->height;
+        int z = mkfix(y * pattern->width) / pattern->height;
+        int w = unmkfix(z);
 
         for (x = 0; x < pattern->width; x++) {
             int sourcex = mkfix(x);
-            int sourcey = mkfix(z);
+            int sourcey = z;
             int *strength = effect->strengths;
             int *offset = effect->offsets;
             int i;
@@ -59,7 +60,7 @@ wave_apply(WaveEffect *effect, int start, int end, int gstart,
             /* Add all waves together */
             for (i = 0; i < effect->wave_count; i++) {
                 sourcex += mul(*(strength++),
-                    effect->sin[(z * (i + 1) + *(offset++)) % pattern->width]);
+                    effect->sin[(w * (i + 1) + *(offset++)) % pattern->width]);
                 sourcey += mul(*(strength++),
                     effect->sin[(x * (i + 1) + *(offset++)) % pattern->width]);
             }
