@@ -49,7 +49,7 @@ wave_apply(WaveEffect *effect, int start, int end, int gstart,
 
         for (x = 0; x < pattern->width; x++) {
             int sourcex = mkfix(x);
-            int sourcey = mkfix(y);
+            int sourcey = mkfix(z);
             int *strength = effect->strengths;
             int *offset = effect->offsets;
             int i;
