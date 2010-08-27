@@ -53,6 +53,8 @@
     <None Include="private\fix.h" />
     <None Include="private\pixel.h" />
     <None Include="para\para.h" />
+    <None Include="private\sin.h" />
+    <None Include="private\effect.h" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="pattern\pattern.c" />

@@ -72,7 +72,9 @@ blend2(PatternPixel *pixel, PatternPixel *row, int x, int width)
     pixel->r = unmkfix(mul(mkfix(p1->r), a1) + mul(mkfix(p2->r), a2));
     pixel->g = unmkfix(mul(mkfix(p1->g), a1) + mul(mkfix(p2->g), a2));
     pixel->b = unmkfix(mul(mkfix(p1->b), a1) + mul(mkfix(p2->b), a2));
+#ifdef STEREO_ALPHA
     pixel->a = unmkfix(mul(mkfix(p1->a), a1) + mul(mkfix(p2->a), a2));
+#endif
 }
 
 /*
@@ -102,7 +104,9 @@ blend4(PatternPixel *pixel, PatternPixel *row1, PatternPixel *row2, int x,
     pixel->r = unmkfix(mul(mkfix(p1.r), a1) + mul(mkfix(p2.r), a2));
     pixel->g = unmkfix(mul(mkfix(p1.g), a1) + mul(mkfix(p2.g), a2));
     pixel->b = unmkfix(mul(mkfix(p1.b), a1) + mul(mkfix(p2.b), a2));
+#ifdef STEREO_ALPHA
     pixel->a = unmkfix(mul(mkfix(p1.a), a1) + mul(mkfix(p2.a), a2));
+#endif
 }
 
 #endif

@@ -9,6 +9,16 @@ struct StereoPatternEffect {
     StereoPattern *pattern;
 
     /**
+     * The name of the effect.
+     */
+    const char *name;
+
+    /*
+     * The limits of the parallellised computation.
+     */
+    int start, end;
+
+    /**
      * Applies the effect to the specified rows.
      */
     void (*Apply)(StereoPatternEffect *effect, int start, int end, int gstart,

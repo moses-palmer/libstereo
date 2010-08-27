@@ -72,11 +72,17 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
             unsigned int width;
 
             if (sourcex < 0) {
+                /* If the source x coordinate is less than zero, we simply copy
+                   the pixel from the pattern buffer; since we subtract the
+                   pattern offset and the table offset, the source x coordinate
+                   will be less than 0 in the first columns */
                 sourcex += pattern_offset + data->image->offsets[0];
                 row = pattern_row;
                 width = image->pattern->width;
             }
             else {
+                /* If the source x coordinate is 0 or greater, we copy the
+                   pixel from the image */
                 row = image_row;
                 width = image->image->width;
             }

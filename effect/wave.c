@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "../private/pixel.h"
+#include "../private/sin.h"
 
 #include "../effect.h"
 
@@ -22,57 +23,38 @@ typedef struct {
 
     /* The offsets for the different waves; it contains wave_count * 2
        elements */
-    int *offsets;
+    unsigned int *offsets;
 
-    /* The sine lookup table; its element count is equal to the width of the
-       source */
-    int *sin;
+    /* The sin lookup table */
+    SinTable sin;
 } WaveEffect;
+#define EFFECT WaveEffect
+#include "../private/effect.h"
 
-/**
- * See StereoPatternEffect::Apply.
- */
 static void
-wave_apply(WaveEffect *effect, int start, int end, int gstart,
-    int gend)
+effect_apply(WaveEffect *effect, PatternPixel *pixel,
+    int x, int y, int dx, int dy, int rx, int ry)
 {
-    int x, y;
-    StereoPattern *pattern = effect->b.pattern;
-    PatternPixel *d;
+    int *strength = effect->strengths;
+    int *offset = effect->offsets;
+    int i;
+    int ix = unmkfix(rx);
+    int iy = unmkfix(ry);
+    PatternPixel *row1;
+    PatternPixel *row2;
 
-    /* Initialise a pointer to the first pixel */
-    d = stereo_pattern_row_get(pattern, start);
-
-    /* Iterate over all our assigned pixels */
-    for (y = start; y < end; y++) {
-        int z = mkfix(y * pattern->width) / pattern->height;
-        int w = unmkfix(z);
-
-        for (x = 0; x < pattern->width; x++) {
-            int sourcex = mkfix(x);
-            int sourcey = z;
-            int *strength = effect->strengths;
-            int *offset = effect->offsets;
-            int i;
-            PatternPixel *row1;
-            PatternPixel *row2;
-
-            /* Add all waves together */
-            for (i = 0; i < effect->wave_count; i++) {
-                sourcex += mul(*(strength++),
-                    effect->sin[(w * (i + 1) + *(offset++)) % pattern->width]);
-                sourcey += mul(*(strength++),
-                    effect->sin[(x * (i + 1) + *(offset++)) % pattern->width]);
-            }
-
-            getrows(effect->source->pixels, sourcey, &row1, &row2,
-                effect->source->width, effect->source->height);
-
-            blend4(d, row1, row2, sourcex, sourcey, effect->source->width);
-
-            d++;
-        }
+    /* Add all waves together */
+    for (i = 0; i < effect->wave_count; i++) {
+        dx += mul(*(strength++),
+            ssin(&effect->sin, iy * (i + 1) + *(offset++)));
+        dy += mul(*(strength++),
+            ssin(&effect->sin, ix * (i + 1) + *(offset++)));
     }
+
+    getrows(effect->source->pixels, dy, &row1, &row2,
+        effect->source->width, effect->source->height);
+
+    blend4(pixel, row1, row2, dx, dy, effect->source->width);
 }
 
 /**
@@ -96,7 +78,7 @@ wave_release(WaveEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);
-    free(effect->sin);
+    sin_table_finalize(&effect->sin);
     free(effect);
 }
 
@@ -108,10 +90,7 @@ stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
     int i;
 
     /* Initialise the basic effect data */
-    result->b.pattern = pattern;
-    result->b.Apply = (void*)wave_apply;
-    result->b.Update = (void*)wave_update;
-    result->b.Release = (void*)wave_release;
+    stereo_effect_vt_initialize(result, pattern, wave);
 
     result->wave_count = wave_count;
 
@@ -126,15 +105,12 @@ stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
     /* Initialise the random offsets */
     result->offsets = malloc(2 * wave_count * sizeof(*result->offsets));
     for (i = 0; i < wave_count * 2; i++) {
-        result->offsets[i] = rand();
+        result->offsets[i] = (unsigned int)rand();
     }
 
     /* Initialise the sine table */
-    result->sin = malloc(pattern->width * sizeof(*result->sin));
-    for (i = 0; i < pattern->width; i++) {
-        result->sin[i] = (int)(LIM
-            * sin(2 * M_PI * (double)i / pattern->width));
-    }
+    sin_table_initialize(&result->sin, pattern->height > pattern->width
+        ? pattern->height : pattern->width);
 
     return (StereoPatternEffect*)result;
 }
