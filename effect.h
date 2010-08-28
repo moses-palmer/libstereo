@@ -13,11 +13,6 @@ struct StereoPatternEffect {
      */
     const char *name;
 
-    /*
-     * The limits of the parallellised computation.
-     */
-    int start, end;
-
     /**
      * Applies the effect to the specified rows.
      */

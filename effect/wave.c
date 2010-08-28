@@ -25,36 +25,35 @@ typedef struct {
        elements */
     unsigned int *offsets;
 
-    /* The sin lookup table */
-    SinTable sin;
+    /* The sin lookup tables */
+    SinTable hsin, vsin;
 } WaveEffect;
 #define EFFECT WaveEffect
 #include "../private/effect.h"
 
-static void
-effect_apply(WaveEffect *effect, PatternPixel *pixel,
-    int x, int y, int dx, int dy, int rx, int ry)
+static inline void
+effect_apply(WaveEffect *effect, PatternPixel *pixel, int x, int y)
 {
+    int sourcex = mkfix(x);
+    int sourcey = mkfix(y);
     int *strength = effect->strengths;
     int *offset = effect->offsets;
     int i;
-    int ix = unmkfix(rx);
-    int iy = unmkfix(ry);
     PatternPixel *row1;
     PatternPixel *row2;
 
     /* Add all waves together */
     for (i = 0; i < effect->wave_count; i++) {
-        dx += mul(*(strength++),
-            ssin(&effect->sin, iy * (i + 1) + *(offset++)));
-        dy += mul(*(strength++),
-            ssin(&effect->sin, ix * (i + 1) + *(offset++)));
+        sourcex += mul(*(strength++),
+            ssin(&effect->vsin, y * (i + 1) + *(offset++)));
+        sourcey += mul(*(strength++),
+            ssin(&effect->hsin, x * (i + 1) + *(offset++)));
     }
 
-    getrows(effect->source->pixels, dy, &row1, &row2,
+    getrows(effect->source->pixels, sourcey, &row1, &row2,
         effect->source->width, effect->source->height);
 
-    blend4(pixel, row1, row2, dx, dy, effect->source->width);
+    blend4(pixel, row1, row2, sourcex, sourcey, effect->source->width);
 }
 
 /**
@@ -78,7 +77,8 @@ wave_release(WaveEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);
-    sin_table_finalize(&effect->sin);
+    sin_table_finalize(&effect->hsin);
+    sin_table_finalize(&effect->vsin);
     free(effect);
 }
 
@@ -108,9 +108,9 @@ stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
         result->offsets[i] = (unsigned int)rand();
     }
 
-    /* Initialise the sine table */
-    sin_table_initialize(&result->sin, pattern->height > pattern->width
-        ? pattern->height : pattern->width);
+    /* Initialise the sine tables */
+    sin_table_initialize(&result->hsin, pattern->width);
+    sin_table_initialize(&result->vsin, pattern->height);
 
     return (StereoPatternEffect*)result;
 }

@@ -24,7 +24,7 @@ typedef struct {
     int components;
 
     /* The sin lookup table */
-    SinTable sin;
+    SinTable hsin, vsin;
 } LuminanceEffect;
 #define EFFECT LuminanceEffect
 #include "../private/effect.h"
@@ -32,20 +32,17 @@ typedef struct {
 /**
  * See StereoPatternEffect::Apply.
  */
-static void
-effect_apply(LuminanceEffect *effect, PatternPixel *pixel,
-    int x, int y, int dx, int dy, int rx, int ry)
+static inline void
+effect_apply(LuminanceEffect *effect, PatternPixel *pixel, int x, int y)
 {
     int i;
-    int v = 0;
-    int ix = unmkfix(rx);
-    int iy = unmkfix(ry);
+    int v = 0;x*=2;
 
     /* Add all waves together */
     for (i = 0; i < effect->wave_count; i++) {
-        v += mul(effect->strengths[i],
-            ssin(&effect->sin, effect->offsets[i] + ix * (i + 1))
-                + ssin(&effect->sin, effect->offsets[i] + iy * (i + 1)));
+        v += mul(effect->strengths[i], 0
+            + ssin(&effect->hsin, effect->offsets[i] + x * (i + 1))
+            + ssin(&effect->vsin, effect->offsets[i] + y * (i + 1)));
     }
 
     /* Apply the value change */
@@ -86,7 +83,8 @@ luminance_release(LuminanceEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);
-    sin_table_finalize(&effect->sin);
+    sin_table_finalize(&effect->hsin);
+    sin_table_finalize(&effect->vsin);
     free(effect);
 }
 
@@ -116,9 +114,9 @@ stereo_pattern_effect_luminance(StereoPattern *pattern, unsigned int wave_count,
         result->offsets[i] = (unsigned int)rand();
     }
 
-    /* Initialise the sine table */
-    sin_table_initialize(&result->sin, pattern->height > pattern->width
-        ? pattern->height : pattern->width);
+    /* Initialise the sine tables */
+    sin_table_initialize(&result->hsin, pattern->width);
+    sin_table_initialize(&result->vsin, pattern->height);
 
     return (StereoPatternEffect*)result;
 }
