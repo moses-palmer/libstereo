@@ -13,9 +13,14 @@
 #define DBITS 10
 
 /*
+ * mkfix(1).
+ */
+#define ONE (1 << DBITS)
+
+/*
  * lim x, x -> 1.
  */
-#define LIM ((1 << DBITS) - 1)
+#define LIM (ONE - 1)
 
 /*
  * Caps a value so that the result is 0 <= result <= 255.

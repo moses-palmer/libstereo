@@ -25,8 +25,7 @@ sin_table_initialize(SinTable *sin_table, int count)
     sin_table->sin = malloc(count * sizeof(sin_table->sin[0]));
 
     for (i = 0; i < count; i++) {
-        sin_table->sin[i] = (int)((LIM + 1)
-            * sin(2.0 * M_PI * (double)i / count));
+        sin_table->sin[i] = (int)(ONE * sin(2.0 * M_PI * (double)i / count));
     }
 }
 
