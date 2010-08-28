@@ -52,12 +52,22 @@
 
 /**
  * Applies the effect to a single pixel.
+ *
+ * x and y are the currect coordinates.
+ *
+ * dx and dy are the current coordinates as fixed point decimal numbers.
+ *
+ * rx and ry are the current relative coordinates. As x goes from 0 to
+ * mkfix(width), rx will go from 0 to mkfix(max(width, height)), and as y goes
+ * from 0 to mkfix(height), ry will go from 0 to mkfix(max(width, height)). The
+ * purpose of these parameters are mainly to allow one lookup table for values
+ * related to the coordinates.
  */
 static void
 effect_apply(EFFECT *effect, PatternPixel *pixel,
     int x, int y, int dx, int dy, int rx, int ry);
 
-/*
+/**
  * Applies an effect when the width is greater than the height.
  */
 static void
@@ -86,7 +96,7 @@ effect_hgtv_apply(StereoPatternEffect *effect, int start, int end,
     }
 }
 
-/*
+/**
  * Applies an effect when the height is greater than the width.
  */
 static void
