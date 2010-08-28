@@ -97,7 +97,7 @@ stereo_pattern_effect_wave(StereoPattern *pattern, unsigned int wave_count,
     /* Initialise the strengths */
     result->strengths = malloc(2 * wave_count * sizeof(*result->strengths));
     for (i = 0; i < wave_count * 2; i++) {
-        result->strengths[i] = (int)(LIM * strengths[i]);
+        result->strengths[i] = (int)(ONE * strengths[i]);
     }
 
     result->source = source;

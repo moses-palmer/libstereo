@@ -103,7 +103,7 @@ stereo_pattern_effect_luminance(StereoPattern *pattern, unsigned int wave_count,
     /* Initialise the strengths */
     result->strengths = malloc(wave_count * sizeof(*result->strengths));
     for (i = 0; i < wave_count; i++) {
-        result->strengths[i] = (int)(LIM * strengths[i]);
+        result->strengths[i] = (int)(ONE * strengths[i]);
     }
 
     result->components = components;
