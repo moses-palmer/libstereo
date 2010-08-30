@@ -17,6 +17,8 @@ stereo_zbuffer_create(unsigned int width, unsigned int height,
     result->channels = channels;
     result->data = malloc(result->rowoffset * height);
     result->free_data = 1;
+
+    return result;
 }
 
 void
@@ -41,6 +43,8 @@ stereo_zbuffer_create_from_data(unsigned int width, unsigned int height,
     result->channels = channels;
     result->data = data;
     result->free_data = 0;
+
+    return result;
 }
 
 ZBuffer*
@@ -56,4 +60,6 @@ stereo_zbuffer_create_from_pattern(StereoPattern *pattern)
     result->channels = 4;
     result->data = (unsigned char*)pattern->pixels;
     result->free_data = 0;
+
+    return result;
 }

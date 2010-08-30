@@ -1,3 +1,4 @@
+#include <alloca.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -12,7 +13,7 @@ stereo_image_create(unsigned int width, unsigned int height,
     StereoPattern *pattern, double depth)
 {
     StereoImage *result;
-    int frac, i;
+    int i;
 
     if (!pattern) {
         return NULL;
@@ -22,13 +23,9 @@ stereo_image_create(unsigned int width, unsigned int height,
     result->image = stereo_pattern_create(width, height);
     result->pattern = pattern;
 
-    /* Create the table of offsets, and make sure that the first offset does not
-       contain a fractional part */
-    frac = (int)(depth * mkfix(
-            sizeof(result->offsets) / sizeof(result->offsets[0])));
-    for (i = 0; i < sizeof(result->offsets) / sizeof(result->offsets[0]); i++) {
-        result->offsets[i] = (int)(depth * mkfix(
-            (sizeof(result->offsets) / sizeof(result->offsets[0])) - i)) - frac;
+    /* Create the table of offsets */
+    for (i = 0; i < 256; i++) {
+        result->offsets[i] = ONE + (int)(depth * i);
     }
 
     return result;
@@ -57,41 +54,23 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
     StereoImage *image = data->image;
     ZBuffer *buffer = data->buffer;
     PatternPixel *d = stereo_pattern_row_get(image->image, start);
-    int pattern_offset = mkfix(image->pattern->width);
 
     for (y = start; y < end; y++) {
+        int source = 0;
         unsigned char *z = stereo_zbuffer_row_get(buffer, y) + data->channel;
-        PatternPixel *image_row = stereo_pattern_row_get(image->image, y);
-        PatternPixel *pattern_row = stereo_pattern_row_get(image->pattern,
+        PatternPixel *row = stereo_pattern_row_get(image->pattern,
             y % image->pattern->height);
 
         for (x = 0; x < image->image->width; x++) {
-            int offset = data->image->offsets[*z];
-            int sourcex = mkfix(x) - pattern_offset - offset;
-            PatternPixel *row;
-            unsigned int width;
+            blend2(d, row, source, image->pattern->width);
+            source += data->image->offsets[*z];
 
-            if (sourcex < 0) {
-                /* If the source x coordinate is less than zero, we simply copy
-                   the pixel from the pattern buffer; since we subtract the
-                   pattern offset and the table offset, the source x coordinate
-                   will be less than 0 in the first columns */
-                sourcex += pattern_offset + data->image->offsets[0];
-                row = pattern_row;
-                width = image->pattern->width;
-            }
-            else {
-                /* If the source x coordinate is 0 or greater, we copy the
-                   pixel from the image */
-                row = image_row;
-                width = image->image->width;
-            }
-
-            blend2(d, row, sourcex, width);
             z += buffer->channels;
             d++;
         }
     }
+
+    return 0;
 }
 
 int

@@ -23,7 +23,7 @@ typedef struct {
 
     /* The offsets for the different waves; it contains wave_count * 2
        elements */
-    unsigned int *offsets;
+    int *offsets;
 
     /* The sin lookup tables */
     SinTable hsin, vsin;

@@ -16,7 +16,7 @@ stereo_pattern_create_from_png(FILE *in)
     png_infop info, end;
     png_bytep *rows = NULL;
     StereoPattern *result;
-    int i, x, y;
+    int x, y;
 
     result = NULL;
 

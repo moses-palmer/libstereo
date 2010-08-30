@@ -63,6 +63,8 @@ para_execute_body(ParaData *data)
 {
     data->callback(data->context, data->start, data->end, data->gstart,
         data->gend);
+
+    return 0;
 }
 
 void
