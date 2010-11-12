@@ -25,8 +25,8 @@ stereo_image_create(unsigned int width, unsigned int height,
 
     /* Create the table of offsets */
     for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
-        result->offsets[i] = 0//ONE
-            + (int)((strength * ONE * i) / (STEREO_OFFSET_COUNT - 1));
+        result->offsets[i] = (int)((strength * ONE * i)
+            / (STEREO_OFFSET_COUNT - 1));
     }
 
     return result;
