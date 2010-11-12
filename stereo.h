@@ -15,19 +15,22 @@ typedef struct {
     int offsets[256];
 } StereoImage;
 
+#define STEREO_OFFSET_COUNT \
+    (sizeof(((StereoImage*)0)->offsets) / sizeof(((StereoImage*)0)->offsets[0]))
+
 /**
  * Creates a stereogram image with the specified dimensions.
  *
  * pattern is used as the background pattern. This function will fail if it is
  * not specified.
  *
- * depth is the multiplicator for offsets.
+ * strength is the strength of the effect. 1.0 is maximum and 0.0 is no effect.
  */
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
-    StereoPattern *pattern, double depth);
+    StereoPattern *pattern, double strength);
 
-/*
+/**
  * Frees a stereo image and its pattern.
  */
 void
