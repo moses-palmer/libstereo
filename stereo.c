@@ -10,7 +10,7 @@
 
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
-    StereoPattern *pattern, double depth)
+    StereoPattern *pattern, double strength)
 {
     StereoImage *result;
     int i;
@@ -24,8 +24,9 @@ stereo_image_create(unsigned int width, unsigned int height,
     result->pattern = pattern;
 
     /* Create the table of offsets */
-    for (i = 0; i < 256; i++) {
-        result->offsets[i] = ONE + (int)(depth * i);
+    for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
+        result->offsets[i] = 0//ONE
+            + (int)((strength * ONE * i) / (STEREO_OFFSET_COUNT - 1));
     }
 
     return result;
@@ -54,16 +55,30 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
     StereoImage *image = data->image;
     ZBuffer *buffer = data->buffer;
     PatternPixel *d = stereo_pattern_row_get(image->image, start);
+    int *offsets;
 
+    offsets = alloca(image->image->width * sizeof(int));
     for (y = start; y < end; y++) {
-        int source = 0;
-        unsigned char *z = stereo_zbuffer_row_get(buffer, y) + data->channel;
+        PatternPixel *stereo_row = (PatternPixel*)stereo_zbuffer_row_get(buffer,
+            y);
+        unsigned char *z = (unsigned char*)stereo_row + data->channel;
         PatternPixel *row = stereo_pattern_row_get(image->pattern,
             y % image->pattern->height);
 
         for (x = 0; x < image->image->width; x++) {
-            blend2(d, row, source, image->pattern->width);
-            source += data->image->offsets[*z];
+            int fx = mkfix(x);
+            int offset;
+
+            if (x < image->pattern->width) {
+                offset = 0;
+            }
+            else {
+                offset = offsets[x - image->pattern->width];
+            }
+            offset += image->offsets[*z];
+
+            offsets[x] = offset;
+            blend2(d, row, fx + offset, image->pattern->width);
 
             z += buffer->channels;
             d++;
