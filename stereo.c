@@ -66,7 +66,6 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
             y % image->pattern->height);
 
         for (x = 0; x < image->image->width; x++) {
-            int fx = mkfix(x);
             int offset;
 
             if (x < image->pattern->width) {
@@ -76,9 +75,9 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
                 offset = offsets[x - image->pattern->width];
             }
             offset += image->offsets[*z];
-
             offsets[x] = offset;
-            blend2(d, row, fx + offset, image->pattern->width);
+
+            blend2(d, row, mkfix(x) + offset, image->pattern->width);
 
             z += buffer->channels;
             d++;
