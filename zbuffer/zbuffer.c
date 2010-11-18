@@ -21,16 +21,6 @@ stereo_zbuffer_create(unsigned int width, unsigned int height,
     return result;
 }
 
-void
-stereo_zbuffer_free(ZBuffer *buffer)
-{
-    if (buffer->free_data) {
-        free(buffer->data);
-    }
-
-    free(buffer);
-}
-
 ZBuffer*
 stereo_zbuffer_create_from_data(unsigned int width, unsigned int height,
     int rowoffset, unsigned int channels, unsigned char *data)
@@ -62,4 +52,14 @@ stereo_zbuffer_create_from_pattern(StereoPattern *pattern)
     result->free_data = 0;
 
     return result;
+}
+
+void
+stereo_zbuffer_free(ZBuffer *buffer)
+{
+    if (buffer->free_data) {
+        free(buffer->data);
+    }
+
+    free(buffer);
 }

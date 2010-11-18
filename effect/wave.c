@@ -60,7 +60,7 @@ effect_apply(WaveEffect *effect, PatternPixel *pixel, int x, int y)
  * See StereoPatternEffect::Update.
  */
 static void
-wave_update(WaveEffect *effect)
+effect_update(WaveEffect *effect)
 {
     int i;
 
@@ -73,7 +73,7 @@ wave_update(WaveEffect *effect)
  * See StereoPatternEffect::Release.
  */
 static void
-wave_release(WaveEffect *effect)
+effect_release(WaveEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);

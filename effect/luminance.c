@@ -36,7 +36,7 @@ static inline void
 effect_apply(LuminanceEffect *effect, PatternPixel *pixel, int x, int y)
 {
     int i;
-    int v = 0;x*=2;
+    int v = 0;
 
     /* Add all waves together */
     for (i = 0; i < effect->wave_count; i++) {
@@ -66,7 +66,7 @@ effect_apply(LuminanceEffect *effect, PatternPixel *pixel, int x, int y)
  * See StereoPatternEffect::Update.
  */
 static void
-luminance_update(LuminanceEffect *effect)
+effect_update(LuminanceEffect *effect)
 {
     int i;
 
@@ -79,7 +79,7 @@ luminance_update(LuminanceEffect *effect)
  * See StereoPatternEffect::Release.
  */
 static void
-luminance_release(LuminanceEffect *effect)
+effect_release(LuminanceEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);

@@ -24,13 +24,13 @@
 /*                                                                            */
 /* Implement the effect update and release functions:                         */
 /* static void                                                                */
-/* sample_update(SampleEffect *effect)                                        */
+/* effect_update(SampleEffect *effect)                                        */
 /* {                                                                          */
 /*     ...                                                                    */
 /* }                                                                          */
 /*                                                                            */
 /* static void                                                                */
-/* sample_release(SampleEffect *effect)                                       */
+/* effect_release(SampleEffect *effect)                                       */
 /* {                                                                          */
 /*     ...                                                                    */
 /* }                                                                          */
@@ -58,7 +58,7 @@ static inline void
 effect_apply(EFFECT *effect, PatternPixel *pixel, int x, int y);
 
 /**
- * Applies an effect when the width is greater than the height.
+ * Applies an effect.
  */
 static void
 effect_apply_lines(StereoPatternEffect *effect, int start, int end,
@@ -87,7 +87,7 @@ effect_apply_lines(StereoPatternEffect *effect, int start, int end,
     (effect)->b.pattern = target_pattern; \
     (effect)->b.name = #namespace; \
     (effect)->b.Apply = (void*)effect_apply_lines; \
-    (effect)->b.Update = (void*)namespace##_update; \
-    (effect)->b.Release = (void*)namespace##_release
+    (effect)->b.Update = (void*)effect_update; \
+    (effect)->b.Release = (void*)effect_release
 
 #endif
