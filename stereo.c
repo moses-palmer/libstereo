@@ -58,6 +58,7 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
     int *offsets;
 
     offsets = alloca(image->image->width * sizeof(int));
+
     for (y = start; y < end; y++) {
         PatternPixel *stereo_row = (PatternPixel*)stereo_zbuffer_row_get(buffer,
             y);
@@ -68,13 +69,16 @@ stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
         for (x = 0; x < image->image->width; x++) {
             int offset;
 
-            if (x < image->pattern->width) {
-                offset = 0;
+            /* If we have passed the first pattern columns, the current offset
+               depends on the previous offsets, otherwise we make a slope
+               upwards to the value of the first column of the z-buffer */
+            if (x >= image->pattern->width) {
+                offset = offsets[x - image->pattern->width]
+                    + image->offsets[*z];
             }
             else {
-                offset = offsets[x - image->pattern->width];
+                offset = image->offsets[*z] * x / image->pattern->width;
             }
-            offset += image->offsets[*z];
             offsets[x] = offset;
 
             blend2(d, row, mkfix(x) + offset, image->pattern->width);
