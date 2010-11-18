@@ -51,7 +51,11 @@ stereo_image_free(StereoImage *image);
  * Applies a z-buffer to the stereo image, creating an actual stereogram.
  *
  * Pixels on the left will be slightly distorted until the column of the pattern
- * width is reached.
+ * width is reached. This is caused by the algorithm enforcing that the leftmost
+ * z-buffer column is 0, and that it then smoothly rises to its actual value.
+ *
+ * Since the edges of the stereogram are not clearly visible because of the way
+ * they are viewed, this is not considered a serious issue.
  *
  * @param image
  *     The stereo image for which to to create a stereogram.
@@ -67,7 +71,7 @@ stereo_image_free(StereoImage *image);
  *     The last line to touch. This line and lines after it will not be
  *     modified. This must be less than or equal to the height of the stereo
  *     image.
- * @return non-zero upon success or 0 upon failure
+ * @return non-zero upon success or 0 otherwise
  */
 int
 stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
