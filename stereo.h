@@ -21,10 +21,18 @@ typedef struct {
 /**
  * Creates a stereogram image with the specified dimensions.
  *
- * pattern is used as the background pattern. This function will fail if it is
- * not specified.
+ * If you already have the z-buffer, use stereo_image_create_from_zbuffer
+ * instead, since that macro uses the correct values for the width
  *
- * strength is the strength of the effect. 1.0 is maximum and 0.0 is no effect.
+ * @param width
+ *     The width of the stereo image.
+ * @param height
+ *     The height of the stereo image.
+ * @param pattern
+ *     The background pattern. This function will fail if it is not specified.
+ * @param strength
+ *     The strength of the effect.
+ * @return a new stereo image, or NULL upon failure
  */
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
@@ -32,6 +40,9 @@ stereo_image_create(unsigned int width, unsigned int height,
 
 /**
  * Frees a stereo image and its pattern.
+ *
+ * @param image
+ *     The stereo image to free.
  */
 void
 stereo_image_free(StereoImage *image);
@@ -39,11 +50,24 @@ stereo_image_free(StereoImage *image);
 /**
  * Applies a z-buffer to the stereo image, creating an actual stereogram.
  *
- * Only the channel channel is used, and only the lines from start to end are
- * modified.
+ * Pixels on the left will be slightly distorted until the column of the pattern
+ * width is reached.
  *
- * The result is non-zero upon success, or 0 if the dimensions of the buffer do
- * not match the dimensions of the stereo image.
+ * @param image
+ *     The stereo image for which to to create a stereogram.
+ * @param buffer
+ *     The z-buffer to use. Its dimensions must match the dimensions of the
+ *     stereo image exactly, otherwise this funciton will fail.
+ * @param channel
+ *     Only this channel will be used when extracting z-values from the buffer.
+ * @param start
+ *     The first line to touch. Lines before this one will not be modified. This
+ *     must be less than end.
+ * @param end
+ *     The last line to touch. This line and lines after it will not be
+ *     modified. This must be less than or equal to the height of the stereo
+ *     image.
+ * @return non-zero upon success or 0 upon failure
  */
 int
 stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
@@ -51,6 +75,8 @@ stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
 
 /**
  * A convenience macro for applying all of a z-buffer to a stereogram.
+ *
+ * @see stereo_image_apply_lines
  */
 #define stereo_image_apply(image, buffer, channel) \
     stereo_image_apply_lines(image, buffer, channel, 0, image->image->height)
