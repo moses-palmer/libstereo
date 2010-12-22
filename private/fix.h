@@ -47,12 +47,7 @@ static inline int
 mkfix(int c)
 {
     /* Preserve the sign bit */
-    if (c < 0) {
-        return -(-c << DBITS);
-    }
-    else {
-        return c << DBITS;
-    }
+    return (c << DBITS) | (c & (1 << (INT_BITS - 1)));
 }
 
 /**
@@ -66,12 +61,7 @@ static inline int
 unmkfix(int c)
 {
     /* Preserve the sign bit */
-    if (c < 0) {
-        return -(-c >> DBITS);
-    }
-    else {
-        return c >> DBITS;
-    }
+    return c >> DBITS | (c & (1 << (INT_BITS - 1)));
 }
 
 /**
