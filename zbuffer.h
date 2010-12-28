@@ -50,9 +50,9 @@ stereo_zbuffer_create(unsigned int width, unsigned int height,
  * @param height
  *     The height of the z-buffer.
  * @param rowoffset
- *     The byte alignment of rows. The absolute value of this must be greater or
- *     equal to width * channels; it may be less than 0 if the bitmap layout is
- *     bottom first.
+ *     The byte alignment of rows. The absolute value of this must be greater
+ *     than or equal to width * channels; it may be less than 0 if the bitmap
+ *     layout is bottom first.
  * @param channels
  *     The number of channels.
  * @param data
