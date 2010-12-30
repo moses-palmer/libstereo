@@ -100,7 +100,7 @@ stereo_zbuffer_free(ZBuffer *zbuffer);
  * @return a pointer to an unsigned char at the beginning of the specified row
  */
 #define stereo_zbuffer_row_get(buffer, y) \
-    (&(buffer)->data[y * (buffer)->rowoffset])
+    (&(buffer)->data[(y) * (buffer)->rowoffset])
 
 /**
  * Returns a reference to the pixel at (x, y).
@@ -114,6 +114,6 @@ stereo_zbuffer_free(ZBuffer *zbuffer);
  * @return a pointer to an unsigned char at the specified location
  */
 #define stereo_zbuffer_pixel_get(buffer, x, y) \
-    (&(buffer)->data[y * (buffer)->rowoffset + x * (buffer)->channels])
+    (stereo_zbuffer_row_get(buffer, y) + (x) * (buffer)->channels)
 
 #endif

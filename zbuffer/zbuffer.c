@@ -10,9 +10,9 @@ stereo_zbuffer_create(unsigned int width, unsigned int height,
 
     result->width = width;
     result->height = height;
-    result->rowoffset = (height * channels)
-        + ((height * channels) % sizeof(int)
-            ? sizeof(int) - (height * channels) % sizeof(int)
+    result->rowoffset = (width * channels)
+        + ((width * channels) % sizeof(int)
+            ? sizeof(int) - (width * channels) % sizeof(int)
             : 0);
     result->channels = channels;
     result->data = malloc(result->rowoffset * height);
