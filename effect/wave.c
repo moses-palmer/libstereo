@@ -27,6 +27,9 @@ typedef struct {
 
     /* The sin lookup tables */
     SinTable hsin, vsin;
+
+    /* The current iteration */
+    int iteration;
 } WaveEffect;
 #define EFFECT WaveEffect
 #include "../private/effect.h"
@@ -65,8 +68,12 @@ effect_update(WaveEffect *effect)
     int i;
 
     for (i = 0; i < effect->wave_count * 2; i++) {
-        effect->offsets[i]++;
+        if (effect->iteration % (i + 1) == 0) {
+            effect->offsets[i]++;
+        }
     }
+
+    effect->iteration++;
 }
 
 /**
