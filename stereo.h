@@ -82,7 +82,7 @@ stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
  *
  * @see stereo_image_apply_lines
  */
-#define stereo_image_apply(image, buffer, channel) \
-    stereo_image_apply_lines(image, buffer, channel, 0, image->image->height)
+#define stereo_image_apply(_image, buffer, channel) \
+    stereo_image_apply_lines(_image, buffer, channel, 0, _image->image->height)
 
 #endif
