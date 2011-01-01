@@ -86,6 +86,7 @@ effect_apply_lines(StereoPatternEffect *effect, int start, int end,
 #define stereo_effect_vt_initialize(effect, target_pattern, namespace) \
     (effect)->b.pattern = target_pattern; \
     (effect)->b.name = #namespace; \
+    (effect)->b.iteration = 0; \
     (effect)->b.Apply = (void*)effect_apply_lines; \
     (effect)->b.Update = (void*)effect_update; \
     (effect)->b.Release = (void*)effect_release
