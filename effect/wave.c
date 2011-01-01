@@ -27,9 +27,6 @@ typedef struct {
 
     /* The sin lookup tables */
     SinTable hsin, vsin;
-
-    /* The current iteration */
-    int iteration;
 } WaveEffect;
 #define EFFECT WaveEffect
 #include "../private/effect.h"
@@ -48,9 +45,11 @@ effect_apply(WaveEffect *effect, PatternPixel *pixel, int x, int y)
     /* Add all waves together */
     for (i = 0; i < effect->wave_count; i++) {
         sourcex += mul(*(strength++),
-            ssin(&effect->vsin, y * (i + 1) + *(offset++)));
+            ssin(&effect->vsin, y * (i + 1) + *(offset++)
+                 + effect->b.iteration));
         sourcey += mul(*(strength++),
-            ssin(&effect->hsin, x * (i + 1) + *(offset++)));
+            ssin(&effect->hsin, x * (i + 1) + *(offset++)
+                 + effect->b.iteration));
     }
 
     getrows(effect->source->pixels, sourcey, &row1, &row2,
@@ -65,15 +64,7 @@ effect_apply(WaveEffect *effect, PatternPixel *pixel, int x, int y)
 static void
 effect_update(WaveEffect *effect)
 {
-    int i;
-
-    for (i = 0; i < effect->wave_count * 2; i++) {
-        if (effect->iteration % (i + 1) == 0) {
-            effect->offsets[i]++;
-        }
-    }
-
-    effect->iteration++;
+    /* Do nothing */
 }
 
 /**
