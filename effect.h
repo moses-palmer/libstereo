@@ -16,6 +16,13 @@ struct StereoPatternEffect {
     const char *name;
 
     /**
+     * The iteration of the effect.
+     *
+     * This is incremented every time the effect is run.
+     */
+    unsigned int iteration;
+
+    /**
      * Applies the effect to the specified rows.
      *
      * @param effect
