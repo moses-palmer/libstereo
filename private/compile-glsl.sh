@@ -6,6 +6,7 @@ base="${path%%.*}"
 destination="$base.h"
 name="`echo ${base##*/} | tr - _`"
 
+# Remove any previous version
 rm -f "$destination"
 
 documentation="`awk '
@@ -26,14 +27,13 @@ BEGIN {
 }
 ' \"$path\"`"
 
-echo "documentation=$documentation" >&2
 if [ ! -z "$documentation" ]; then
-    echo "$documentation"                                >> "$destination"
-    echo                                                 >> "$destination"
+    echo "$documentation"                                      >> "$destination"
+    echo                                                       >> "$destination"
 fi
 
-echo "#ifndef $name"                                     >> "$destination"
-echo "#define $name \\"                                  >> "$destination"
-cpp -P "$path" | sed -e 's/"/\\"/g;s/^/\"/g;s/$/\" \\/g' >> "$destination"
-echo "/* End of $path */"                                >> "$destination"
-echo "#endif"                                            >> "$destination"
+echo "#ifndef $name"                                           >> "$destination"
+echo "#define $name \\"                                        >> "$destination"
+cpp -P "$path" | sed -e 's/"/\\"/g;s/^/\"/g;s/$/\\n\" \\/g'    >> "$destination"
+echo "/* End of $path */"                                      >> "$destination"
+echo "#endif"                                                  >> "$destination"
