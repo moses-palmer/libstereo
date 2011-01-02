@@ -17,10 +17,12 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
+				<Environment>
+					<Variable name="compile_glsl" value="./compile-glsl.sh" />
+				</Environment>
 			</Target>
 			<Target title="Release">
 				<Option output="libstereo" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -59,10 +61,16 @@
 		<Unit filename="pattern/pattern.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="private/compile-glsl.sh" />
 		<Unit filename="private/effect.h" />
 		<Unit filename="private/fix.h" />
 		<Unit filename="private/pixel.h" />
 		<Unit filename="private/sin.h" />
+		<Unit filename="stereo-shader.glsl">
+			<Option compile="1" />
+			<Option compiler="gcc" use="1" buildCommand='./private/compile-glsl.sh &quot;$file&quot;' />
+		</Unit>
+		<Unit filename="stereo-shader.h" />
 		<Unit filename="stereo.c">
 			<Option compilerVar="CC" />
 		</Unit>
