@@ -66,11 +66,15 @@
 		<Unit filename="private/fix.h" />
 		<Unit filename="private/pixel.h" />
 		<Unit filename="private/sin.h" />
-		<Unit filename="stereo-shader.glsl">
+		<Unit filename="private/stereo-shader.glsl">
 			<Option compile="1" />
 			<Option compiler="gcc" use="1" buildCommand='./private/compile-glsl.sh &quot;$file&quot;' />
 		</Unit>
-		<Unit filename="stereo-shader.h" />
+		<Unit filename="private/stereo-shader.h" />
+		<Unit filename="stereo-gl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stereo-gl.h" />
 		<Unit filename="stereo.c">
 			<Option compilerVar="CC" />
 		</Unit>

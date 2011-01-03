@@ -5,6 +5,8 @@ a depth map.
 
 */
 
+#version 400
+
 /**
  * The strength of the stereogram effect.
  */
