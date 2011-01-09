@@ -59,7 +59,8 @@ stereo_image_gl_create(StereoPattern *pattern)
     if (!compiled) {
         GLchar buffer[1024];
         glGetShaderInfoLog(shader, sizeof(buffer), NULL, buffer);
-        printf("Not compiled: %s.\n", buffer);
+        printf("%s", buffer);
+
         glDeleteShader(shader);
         return NULL;
     }
@@ -67,7 +68,6 @@ stereo_image_gl_create(StereoPattern *pattern)
     /* Create the program and attach the shader */
     program = glCreateProgram();
     if (!program) {
-        printf("No program.\n");
         glDeleteShader(shader);
         return NULL;
     }
@@ -77,7 +77,6 @@ stereo_image_gl_create(StereoPattern *pattern)
     glLinkProgram(program);
     glGetObjectParameterivARB(program, GL_LINK_STATUS, &linked);
     if (!linked) {
-        printf("Not linked.\n");
         glDeleteShader(shader);
         glDeleteProgram(program);
         return NULL;
