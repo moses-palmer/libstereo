@@ -5,12 +5,17 @@ a depth map.
 
 */
 
-#version 400
+#version 110
 
 /**
  * The strength of the stereogram effect.
  */
 uniform float strength;
+
+/**
+ * The width in texels of the left hand margin.
+ */
+uniform int left_margin;
 
 /**
  * The background pattern texture.
@@ -22,33 +27,25 @@ uniform sampler2D pattern;
  */
 uniform sampler2DShadow zbuffer;
 
-/**
- * The output is a texture colour value.
- */
-out vec4 result;
-
 void
 main()
 {
     /* This is the source x coordinate in the pattern */
     float x = gl_FragCoord.x;
-
-    /* Store the dimensions of the pattern image */
-    ivec2 pattern_dim = textureSize(pattern, 0);
-
+#if 0
     do {
         /* Get the depth value at the current location in the z-buffer */
-        float d = texture(zbuffer, gl_FragCoord);
+        float d = shadow2D(zbuffer, vec3(x, gl_FragCoord.y, 0.0))[0];
 
         /* If we are currently at the first pattern iteration, we need to scale
            the depth to make the resulting image smooth */
-        if (x < pattern_dim[0]) {
-            d *= gl_FragCoord.x / pattern_dim[0];
+        if (x < float(left_margin)) {
+            d *= x / float(left_margin);
         }
 
         x -= d * strength;
-    } while (gl_FragCoord.x > pattern_dim[0]);
-
+    } while (x > float(left_margin));
+#endif
     /* Write the result */
-    result = texture(pattern, gl_FragCoord);
+    gl_FragColor = texture2D(pattern, vec2(gl_FragCoord.x, gl_FragCoord.y));
 }
