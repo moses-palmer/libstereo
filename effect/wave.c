@@ -64,7 +64,11 @@ effect_apply(WaveEffect *effect, PatternPixel *pixel, int x, int y)
 static void
 effect_update(WaveEffect *effect)
 {
-    /* Do nothing */
+    int i;
+
+    for (i = 0; i < effect->wave_count; i++) {
+        effect->offsets[i] += i;
+    }
 }
 
 /**
