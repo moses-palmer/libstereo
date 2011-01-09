@@ -121,7 +121,7 @@ stereo_pattern_save_to_png_file(StereoPattern *pattern, const char *filename);
  * @return a pointer to a PatternPixel at the beginning of the specified row
  */
 #define stereo_pattern_row_get(pattern, y) \
-    (&(pattern)->pixels[y * (pattern)->width])
+    (&(pattern)->pixels[(y) * (pattern)->width])
 
 /**
  * Returns a reference to the pixel at (x, y).
@@ -135,6 +135,6 @@ stereo_pattern_save_to_png_file(StereoPattern *pattern, const char *filename);
  * @return a pointer to a PatternPixel at the specified location
  */
 #define stereo_pattern_pixel_get(pattern, x, y) \
-    (&(pattern)->pixels[y * (pattern)->width + x])
+    (stereo_pattern_row_get(pattern, y) + x)
 
 #endif
