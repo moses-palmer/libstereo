@@ -13,7 +13,6 @@ stereo_image_create(unsigned int width, unsigned int height,
     StereoPattern *pattern, double strength)
 {
     StereoImage *result;
-    int i;
 
     if (!pattern) {
         return NULL;
@@ -23,11 +22,7 @@ stereo_image_create(unsigned int width, unsigned int height,
     result->image = stereo_pattern_create(width, height);
     result->pattern = pattern;
 
-    /* Create the table of offsets */
-    for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
-        result->offsets[i] = (int)((strength * ONE * i)
-            / (STEREO_OFFSET_COUNT - 1));
-    }
+    stereo_image_set_strength(result, strength);
 
     return result;
 }
@@ -41,14 +36,26 @@ stereo_image_free(StereoImage *image)
     free(image);
 }
 
+void
+stereo_image_set_strength(StereoImage *image, double strength)
+{
+    int i;
+
+    /* Create the table of offsets */
+    for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
+        image->offsets[i] = (int)((strength * ONE * i)
+            / (STEREO_OFFSET_COUNT - 1));
+    }
+}
+
 typedef struct {
     StereoImage *image;
     ZBuffer *buffer;
     unsigned int channel;
-} StereoImageApplyData;
+} StereoImageApplyLinesData;
 
 static int
-stereo_image_apply_lines_do(StereoImageApplyData *data, int start, int end,
+stereo_image_apply_lines_do(StereoImageApplyLinesData *data, int start, int end,
     int gstart, int gend)
 {
     unsigned int x, y;
@@ -95,7 +102,7 @@ int
 stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
     unsigned int channel, unsigned int start, unsigned int end)
 {
-    StereoImageApplyData data;
+    StereoImageApplyLinesData data;
 
     /* Verify the dimensions of the Z-buffer */
     if (image->image->width != buffer->width

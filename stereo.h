@@ -48,6 +48,17 @@ void
 stereo_image_free(StereoImage *image);
 
 /**
+ * Sets the strength of the stereogram effect.
+ *
+ * This will have effect on the next call to stereo_image_apply_lines.
+ *
+ * @param strength
+ *     The strength of the effect.
+ */
+void
+stereo_image_set_strength(StereoImage *image, double strength);
+
+/**
  * Applies a z-buffer to the stereo image, creating an actual stereogram.
  *
  * Pixels on the left will be slightly distorted until the column of the pattern
