@@ -10,7 +10,7 @@
 
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
-    StereoPattern *pattern, double strength)
+    StereoPattern *pattern, double strength, int is_inverted)
 {
     StereoImage *result;
 
@@ -22,7 +22,7 @@ stereo_image_create(unsigned int width, unsigned int height,
     result->image = stereo_pattern_create(width, height);
     result->pattern = pattern;
 
-    stereo_image_set_strength(result, strength);
+    stereo_image_set_strength(result, strength, is_inverted);
 
     return result;
 }
@@ -37,13 +37,14 @@ stereo_image_free(StereoImage *image)
 }
 
 void
-stereo_image_set_strength(StereoImage *image, double strength)
+stereo_image_set_strength(StereoImage *image, double strength, int is_inverted)
 {
     int i;
 
     /* Create the table of offsets */
     for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
-        image->offsets[i] = (int)((strength * ONE * i)
+        int ival = is_inverted ? STEREO_OFFSET_COUNT - i : i;
+        image->offsets[i] = (int)((strength * ONE * ival)
             / (STEREO_OFFSET_COUNT - 1));
     }
 }

@@ -32,11 +32,14 @@ typedef struct {
  *     The background pattern. This function will fail if it is not specified.
  * @param strength
  *     The strength of the effect.
+ * @param is_inverted
+ *     Whether z-buffer values are inverted, that is, 255 means far away and 0
+ *     means near.
  * @return a new stereo image, or NULL upon failure
  */
 StereoImage*
 stereo_image_create(unsigned int width, unsigned int height,
-    StereoPattern *pattern, double strength);
+    StereoPattern *pattern, double strength, int is_inverted);
 
 /**
  * Frees a stereo image and its pattern.
@@ -54,9 +57,12 @@ stereo_image_free(StereoImage *image);
  *
  * @param strength
  *     The strength of the effect.
+ * @param is_inverted
+ *     Whether z-buffer values are inverted, that is, 255 means far away and 0
+ *     means near.
  */
 void
-stereo_image_set_strength(StereoImage *image, double strength);
+stereo_image_set_strength(StereoImage *image, double strength, int is_inverted);
 
 /**
  * Applies a z-buffer to the stereo image, creating an actual stereogram.
