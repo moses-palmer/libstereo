@@ -31,7 +31,6 @@ void
 stereo_image_free(StereoImage *image)
 {
     stereo_pattern_free(image->image);
-    stereo_pattern_free(image->pattern);
 
     free(image);
 }

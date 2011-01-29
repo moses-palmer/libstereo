@@ -42,7 +42,7 @@ stereo_image_create(unsigned int width, unsigned int height,
     StereoPattern *pattern, double strength, int is_inverted);
 
 /**
- * Frees a stereo image and its pattern.
+ * Frees a stereo image and its image.
  *
  * @param image
  *     The stereo image to free.
