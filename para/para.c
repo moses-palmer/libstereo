@@ -4,12 +4,12 @@
 
 #include "para.h"
 
-/*
+/**
  * The cached value for the thread count.
  */
 static unsigned int thread_count = 0;
 
-/*
+/**
  * The system implementation that counts the number of CPU cores.
  *
  * This function must return a value greater than 0, otherwise it will be called
@@ -38,25 +38,29 @@ para_thread_count(void)
     return thread_count = para_thread_count_implementation();
 }
 
-/*
+/**
  * Callback data for a thread body.
  */
 typedef struct {
-    /* The callback function */
+    /** The callback function */
     ParaCallback callback;
 
-    /* The user specified context passed to the callback function */
+    /** The user specified context passed to the callback function */
     void *context;
 
-    /* The calculated start and end of this thread */
+    /** The calculated start and end of this thread */
     int start, end;
 
-    /* The global start and end */
+    /** The global start and end */
     int gstart, gend;
 } ParaData;
 
-/*
+/**
  * The thread body of a parallelised task thread.
+ *
+ * @param data
+ *     Data describing the current task load.
+ * @return 0
  */
 static int
 para_execute_body(ParaData *data)

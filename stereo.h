@@ -5,16 +5,19 @@
 #include "zbuffer.h"
 
 typedef struct {
-    /* The actual image data */
+    /** The actual image data */
     StereoPattern *image;
 
-    /* The pattern used */
+    /** The pattern used */
     StereoPattern *pattern;
 
-    /* The offsets applied to values in the z-buffer */
+    /** The offsets applied to values in the z-buffer */
     int offsets[256];
 } StereoImage;
 
+/**
+ * The number of offsets in StereoImage::offsets.
+ */
 #define STEREO_OFFSET_COUNT \
     (sizeof(((StereoImage*)0)->offsets) / sizeof(((StereoImage*)0)->offsets[0]))
 
@@ -22,7 +25,7 @@ typedef struct {
  * Creates a stereogram image with the specified dimensions.
  *
  * If you already have the z-buffer, use stereo_image_create_from_zbuffer
- * instead, since that macro uses the correct values for the width
+ * instead, since that macro uses the correct values for the width.
  *
  * @param width
  *     The width of the stereo image.

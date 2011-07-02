@@ -52,13 +52,27 @@
 /**
  * Applies the effect to a single pixel.
  *
- * x and y are the currect coordinates.
+ * @param effect
+ *     The current effect.
+ * @param pixel
+ *     The pixel to which to apply the effect.
+ * @param x, y
+ *     The position of the pixel.
  */
 static inline void
 effect_apply(EFFECT *effect, PatternPixel *pixel, int x, int y);
 
 /**
  * Applies an effect.
+ *
+ * This function is called as a parallelised task, and its parameters come from
+ * para_execute.
+ *
+ * @param effect
+ *     The current effect.
+ * @param start, end, start, gend
+ *     See para_execute
+ * @see para_execute
  */
 static void
 effect_apply_lines(StereoPatternEffect *effect, int start, int end,
@@ -82,6 +96,15 @@ effect_apply_lines(StereoPatternEffect *effect, int start, int end,
 
 /**
  * Initialises an effect v-table.
+ *
+ * @param effect
+ *     The effect object. This must be a struct where the first field is a
+ *     StereoPatternEffect and is called b.
+ * @param target_pattern
+ *     The target pattern of the effect.
+ * @param namespace
+ *     The namespace of the effect. This is only used to set the name of the
+ *     effect.
  */
 #define stereo_effect_vt_initialize(effect, target_pattern, namespace) \
     (effect)->b.pattern = target_pattern; \

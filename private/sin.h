@@ -9,12 +9,23 @@
  * A table containing precalculated sin values. It covers an entire period.
  */
 typedef struct {
+    /** The number of entries in sin */
     int count;
+
+    /** The actual sine values */
     int *sin;
 } SinTable;
 
 /**
  * Initialises a sin table with count elements and precalculates its values.
+ *
+ * It does not check whether the table has already been initialised.
+ *
+ * @param sin_table
+ *     The sine table to initialise.
+ * @param count
+ *     The number of sine entries to create. This affects the resolution and
+ *     memory footprint of the structure.
  */
 static inline void
 sin_table_initialize(SinTable *sin_table, int count)
@@ -31,6 +42,11 @@ sin_table_initialize(SinTable *sin_table, int count)
 
 /**
  * Frees a sin table.
+ *
+ * Only the sine table is freed.
+ *
+ * @param sin_table
+ *     The sine table to free.
  */
 static inline void
 sin_table_finalize(SinTable *sin_table)
@@ -40,6 +56,10 @@ sin_table_finalize(SinTable *sin_table)
 
 /**
  * Calculates the sin value of 2 * pi * x / sin_table->count.
+ *
+ * @param sin_table
+ *     The sine table.
+ * @param
  */
 static inline int
 ssin(SinTable *sin_table, int x)

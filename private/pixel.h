@@ -7,8 +7,19 @@
 
 #define _MODULUS_UNSIGNED
 
-/*
- * Returns the row at unmkfix(y) and the next row. Rows wrap around.
+/**
+ * Returns the row at iy = unmkfix(y) and the next row.
+ *
+ * Rows wrap around, so if iy == height - 1, row2 will be set to the first row.
+ *
+ * @param pixels
+ *     The start of the pixel data.
+ * @param y
+ *     The row to retrieve. This is a fixed floating point value.
+ * @param row1, row2
+ *     The output rows.
+ * @param width, height
+ *     The dimensions of the pixel data.
  */
 static inline void
 getrows(PatternPixel *pixels, int y, PatternPixel **row1,
@@ -32,13 +43,21 @@ getrows(PatternPixel *pixels, int y, PatternPixel **row1,
     }
 }
 
-/*
- * Sets pixel to the linearly interpolated value calculated from the row.
+/**
+ * Sets pixel to the linearly interpolated value calculated from the row at
+ * ix = unmkfix(x) and the next column.
  *
- * x is a fixed floating point value. The fractional part is used to
- * interpolate.
+ * Columns wrap around, so if if ix == width - 1, the first and the last columns
+ * will be blended.
  *
- * width is the width of the row.
+ * @param pixel
+ *     The pixel to set.
+ * @param row
+ *     The row.
+ * @param x
+ *     The column to retrieve. This is a fixed floating point value.
+ * @param width
+ *     The width of the row data.
  */
 static inline void
 blend2(PatternPixel *pixel, PatternPixel *row, int x, int width)
@@ -77,13 +96,20 @@ blend2(PatternPixel *pixel, PatternPixel *row, int x, int width)
 #endif
 }
 
-/*
- * Sets pixel to the linearly interpolated value calculated from the rows.
+/**
+ * Sets pixel to the linearly interpolated value calculated from the rows at
+ * ix = unmkfix(x) and iy = unmkfix(y).
  *
- * x and y are fixed floating point values. The fractional part is used to
- * interpolate.
+ * Columns and rows wrap around just like in getrows and blend2.
  *
- * width is the width of the rows.
+ * @param pixel
+ *     The pixel to set.
+ * @param row1, row2
+ *     The rows to use. row2 must be the row immediately after row1.
+ * @param x, y
+ *     The pixel to retrieve. These are a fixed floating point values.
+ * @param width
+ *     The width of the row data.
  */
 static inline void
 blend4(PatternPixel *pixel, PatternPixel *row1, PatternPixel *row2, int x,
