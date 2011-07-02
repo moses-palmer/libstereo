@@ -44,12 +44,13 @@ sin_table_finalize(SinTable *sin_table)
 static inline int
 ssin(SinTable *sin_table, int x)
 {
+#ifndef MODULUS_UNSIGNED
     if (x < 0) {
         return sin_table->sin[x % sin_table->count + sin_table->count];
     }
-    else {
-        return sin_table->sin[x % sin_table->count];
-    }
+#endif
+
+    return sin_table->sin[x % sin_table->count];
 }
 
 #endif
