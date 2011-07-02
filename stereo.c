@@ -30,6 +30,7 @@ stereo_image_create(unsigned int width, unsigned int height,
 void
 stereo_image_free(StereoImage *image)
 {
+    stereo_pattern_free(image->pattern);
     stereo_pattern_free(image->image);
 
     free(image);

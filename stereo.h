@@ -30,6 +30,8 @@ typedef struct {
  *     The height of the stereo image.
  * @param pattern
  *     The background pattern. This function will fail if it is not specified.
+ *     Ownership of this pattern is assumed by the stereo image, and the stereo
+ *     image frees it when it is freed.
  * @param strength
  *     The strength of the effect.
  * @param is_inverted
