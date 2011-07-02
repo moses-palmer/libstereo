@@ -52,6 +52,8 @@ static inline void
 sin_table_finalize(SinTable *sin_table)
 {
     free(sin_table->sin);
+    sin_table->sin = NULL;
+    sin_table->count = 0;
 }
 
 /**
