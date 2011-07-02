@@ -1,0 +1,8 @@
+*.a
+*.so
+*.o
+stereo.depend
+stereo.layout
+
+# This is a generated file
+private/stereo-shader.h
