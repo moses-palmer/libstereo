@@ -79,6 +79,7 @@ effect_release(WaveEffect *effect)
 {
     free(effect->strengths);
     free(effect->offsets);
+    stereo_pattern_free(effect->source);
     sin_table_finalize(&effect->hsin);
     sin_table_finalize(&effect->vsin);
     free(effect);

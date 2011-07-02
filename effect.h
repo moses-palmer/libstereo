@@ -134,7 +134,9 @@ stereo_pattern_effect_luminance(StereoPattern *pattern, unsigned int wave_count,
  *     strength. A value of 0.0 will not create a visible wave in the current
  *     dimension.
  * @param source
- *     The pattern that is distorted and copied to the target.
+ *     The pattern that is distorted and copied to the target. Ownership of this
+ *     pattern is assumed by the effect, and the effect frees it when the effect
+ *     is freed.
  * @return a new effect
  */
 StereoPatternEffect*
