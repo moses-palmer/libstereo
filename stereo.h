@@ -44,6 +44,18 @@ stereo_image_create(unsigned int width, unsigned int height,
     StereoPattern *pattern, double strength, int is_inverted);
 
 /**
+ * Creates a stereogram image with dimensions taken from a z-buffer.
+ *
+ * @param zbuffer
+ *     The z-buffer that determines the dimensions of the stereo image.
+ * @param ...
+ *     Parameters passed on to stereo_image_create.
+ * @see stereo_image_create
+ */
+#define stereo_image_create_from_zbuffer(zbuffer, ...) \
+    stereo_image_create((zbuffer)->width, (zbuffer)->height, __VA_ARGS__)
+
+/**
  * Frees a stereo image and its image.
  *
  * @param image
