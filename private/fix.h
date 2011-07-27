@@ -1,11 +1,9 @@
 #ifndef PRIVATE_FIX_H
 #define PRIVATE_FIX_H
 
-#if defined __x86_64__
-# define INT_BITS 64
-#else
-# define INT_BITS 32
-#endif
+#include <limits.h>
+
+#define INT_BITS (sizeof(int) * CHAR_BIT)
 
 /**
  * The number of bits reserved for the decimals.
