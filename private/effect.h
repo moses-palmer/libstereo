@@ -4,7 +4,7 @@
 /*                                                                            */
 /* Define the internal struct used by the effect and include this file:       */
 /* typedef struct {                                                           */
-/*     StereoPatternEffect b;                                                 */
+/*     STEREO_PATTERN_EFFECT_HEADER;                                                 */
 /*     ...                                                                    */
 /* } SampleEffect                                                             */
 /* #define EFFECT SampleEffect                                                */
@@ -48,6 +48,15 @@
 
 #ifndef PRIVATE_EFFECT_H
 #define PRIVATE_EFFECT_H
+
+#include "../para/para.h"
+
+/**
+ * The header that must be specified as the first field in an effect.
+ */
+#define STEREO_PATTERN_EFFECT_HEADER \
+    StereoPatternEffect b; \
+    ParaContext *para
 
 /**
  * Applies the effect to a single pixel.
@@ -112,6 +121,7 @@ effect_apply_lines(StereoPatternEffect *effect, int start, int end,
     (effect)->b.iteration = 0; \
     (effect)->b.Apply = (void*)effect_apply_lines; \
     (effect)->b.Update = (void*)effect_update; \
-    (effect)->b.Release = (void*)effect_release
+    (effect)->b.Release = (void*)effect_release; \
+    (effect)->para = para_create(effect, (ParaCallback)effect_apply_lines)
 
 #endif

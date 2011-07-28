@@ -6,30 +6,32 @@
 
 #include "../effect.h"
 
-/*
+typedef struct WaveEffect WaveEffect;
+#define EFFECT WaveEffect
+#include "../private/effect.h"
+
+/**
  * Effect data for a luminance effect.
  */
-typedef struct {
-    StereoPatternEffect b;
+struct WaveEffect {
+    STEREO_PATTERN_EFFECT_HEADER;
 
-    /* The number of waves */
+    /** The number of waves */
     unsigned int wave_count;
 
-    /* The strengths of the waves; it contains wave_count * 2 elements */
+    /** The strengths of the waves; it contains wave_count * 2 elements */
     int *strengths;
 
-    /* The source pattern to use */
+    /** The source pattern to use */
     StereoPattern *source;
 
-    /* The offsets for the different waves; it contains wave_count * 2
-       elements */
+    /** The offsets for the different waves; it contains wave_count * 2
+        elements */
     int *offsets;
 
     /* The sin lookup tables */
     SinTable hsin, vsin;
-} WaveEffect;
-#define EFFECT WaveEffect
-#include "../private/effect.h"
+};
 
 static inline void
 effect_apply(WaveEffect *effect, PatternPixel *pixel, int x, int y)

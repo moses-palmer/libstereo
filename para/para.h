@@ -8,6 +8,11 @@
 #define PARA_THREAD_COUNT "STEREO_PARA_THREAD_COUNT"
 
 /**
+ * The opaque type that represents a parallel task context.
+ */
+typedef struct ParaContext ParaContext;
+
+/**
  * A callback function used to parallelise a computation.
  *
  * @param context
@@ -37,22 +42,80 @@ unsigned int
 para_thread_count(void);
 
 /**
- * Executes a pallel task using para_thread_count threads and waits for every
- * thread to complete.
+ * Creates a parallel task context that may later be executed.
  *
- * All values between start and end will be passed in the intervals passed to
- * the callback function.
+ * para_thread_count - 1 threads are created and suspended.
  *
  * @param context
  *     The context parameter passed to all calls of the callback as the first
  *     argument.
+ * @param callback
+ *     The callback function that performs the task.
+ * @return a parallel task context, or NULL if an error occurred
+ */
+ParaContext*
+para_create(void *context, ParaCallback callback);
+
+/**
+ * Releases a previously created parallel task context. If para is NULL, nothing
+ * is done.
+ *
+ * If the task is in progress, this function first waits for it to complete.
+ *
+ * @param para
+ *     The parallel task context to free.
+ */
+void
+para_free(ParaContext *para);
+
+/**
+ * Starts execution of a parallel task and waits for it to complete.
+ *
+ * All values between start and end will be passed in the intervals passed to
+ * the callback function.
+ *
+ * If the task is already running, this function is blocking until the previous
+ * task and the current task have completed.
+ *
+ * @param para
+ *     The parallel task context to execute.
  * @param start, end
  *     The start and end values to operate on. All values, including start and
  *     end, will be passed to callbacks.
- * @param callback
- *     The callback function that performs the task.
  */
 void
-para_execute(void *context, int start, int end, ParaCallback callback);
+para_execute(ParaContext *para, int start, int end);
+
+/**
+ * Starts execution of a parallel task with a temporary context and waits for it
+ * to complete.
+ *
+ * The parallel task context data is temporarily set to context, and then
+ * reverted before this function returns.
+ *
+ * @param para
+ *     The parallel task context to execute.
+ * @param context
+ *     The temporary context to use.
+ * @param start, end
+ *     The start and end values to operate on. All values, including start and
+ *     end, will be passed to callbacks.
+ * @see para_execute
+ */
+void
+para_execute_with_context(ParaContext *para, void *context, int start, int end);
+
+/**
+ * Determines whether the parallel task is currently executing.
+ *
+ * The return value is whether the task was executing at some point during the
+ * call to this function
+ *
+ * @param para
+ *     The parallel task context to execute.
+ * @return whether the operation is in progress
+ */
+int
+para_is_executing(ParaContext *para);
 
 #endif

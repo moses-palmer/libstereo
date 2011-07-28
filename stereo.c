@@ -8,47 +8,6 @@
 #include "para/para.h"
 #include "stereo.h"
 
-StereoImage*
-stereo_image_create(unsigned int width, unsigned int height,
-    StereoPattern *pattern, double strength, int is_inverted)
-{
-    StereoImage *result;
-
-    if (!pattern) {
-        return NULL;
-    }
-
-    result = malloc(sizeof(StereoImage));
-    result->image = stereo_pattern_create(width, height);
-    result->pattern = pattern;
-
-    stereo_image_set_strength(result, strength, is_inverted);
-
-    return result;
-}
-
-void
-stereo_image_free(StereoImage *image)
-{
-    stereo_pattern_free(image->pattern);
-    stereo_pattern_free(image->image);
-
-    free(image);
-}
-
-void
-stereo_image_set_strength(StereoImage *image, double strength, int is_inverted)
-{
-    int i;
-
-    /* Create the table of offsets */
-    for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
-        int ival = is_inverted ? STEREO_OFFSET_COUNT - i : i;
-        image->offsets[i] = (int)((strength * ONE * ival)
-            / (STEREO_OFFSET_COUNT - 1));
-    }
-}
-
 typedef struct {
     StereoImage *image;
     ZBuffer *buffer;
@@ -99,6 +58,50 @@ stereo_image_apply_lines_do(StereoImageApplyLinesData *data, int start, int end,
     return 0;
 }
 
+StereoImage*
+stereo_image_create(unsigned int width, unsigned int height,
+    StereoPattern *pattern, double strength, int is_inverted)
+{
+    StereoImage *result;
+
+    if (!pattern) {
+        return NULL;
+    }
+
+    result = malloc(sizeof(StereoImage));
+    result->image = stereo_pattern_create(width, height);
+    result->pattern = pattern;
+    result->para = para_create(NULL,
+        (ParaCallback)stereo_image_apply_lines_do);
+
+    stereo_image_set_strength(result, strength, is_inverted);
+
+    return result;
+}
+
+void
+stereo_image_free(StereoImage *image)
+{
+    para_free(image->para);
+    stereo_pattern_free(image->pattern);
+    stereo_pattern_free(image->image);
+
+    free(image);
+}
+
+void
+stereo_image_set_strength(StereoImage *image, double strength, int is_inverted)
+{
+    int i;
+
+    /* Create the table of offsets */
+    for (i = 0; i < STEREO_OFFSET_COUNT; i++) {
+        int ival = is_inverted ? STEREO_OFFSET_COUNT - i : i;
+        image->offsets[i] = (int)((strength * ONE * ival)
+            / (STEREO_OFFSET_COUNT - 1));
+    }
+}
+
 int
 stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
     unsigned int channel, unsigned int start, unsigned int end)
@@ -125,8 +128,7 @@ stereo_image_apply_lines(StereoImage *image, ZBuffer *buffer,
     data.buffer = buffer;
     data.channel = channel;
 
-    para_execute(&data, start, end,
-        (ParaCallback)stereo_image_apply_lines_do);
+    para_execute_with_context(image->para, &data, start, end);
 
     return 1;
 }

@@ -1,6 +1,8 @@
 #ifndef STEREO_H
 #define STEREO_H
 
+#include "para/para.h"
+
 #include "pattern.h"
 #include "zbuffer.h"
 
@@ -10,6 +12,9 @@ typedef struct {
 
     /** The pattern used */
     StereoPattern *pattern;
+
+    /** The parallel task context that performs the algorithm */
+    ParaContext *para;
 
     /** The offsets applied to values in the z-buffer */
     int offsets[256];

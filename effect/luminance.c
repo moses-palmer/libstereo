@@ -5,29 +5,31 @@
 
 #include "../effect.h"
 
-/*
- * Effect data for a luminance effect.
- */
-typedef struct {
-    StereoPatternEffect b;
-
-    /* The number of waves */
-    unsigned int wave_count;
-
-    /* The strengths of the waves; it contains wave_count elements */
-    int *strengths;
-
-    /* The wave offsets; it contains wave_count elements */
-    unsigned int *offsets;
-
-    /* The pixel components */
-    int components;
-
-    /* The sin lookup table */
-    SinTable hsin, vsin;
-} LuminanceEffect;
+typedef struct LuminanceEffect LuminanceEffect;
 #define EFFECT LuminanceEffect
 #include "../private/effect.h"
+
+/**
+ * Effect data for a luminance effect.
+ */
+struct LuminanceEffect {
+    STEREO_PATTERN_EFFECT_HEADER;
+
+    /** The number of waves */
+    unsigned int wave_count;
+
+    /** The strengths of the waves; it contains wave_count elements */
+    int *strengths;
+
+    /** The wave offsets; it contains wave_count elements */
+    unsigned int *offsets;
+
+    /** The pixel components */
+    int components;
+
+    /** The sin lookup table */
+    SinTable hsin, vsin;
+};
 
 /**
  * See StereoPatternEffect::Apply.
