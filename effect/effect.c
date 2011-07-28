@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
-#include "../para/para.h"
+#include <para/para.h>
+
 #include "../effect.h"
 
 typedef struct {

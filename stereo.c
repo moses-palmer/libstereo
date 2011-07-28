@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <para/para.h>
+
 #include "private/fix.h"
 #include "private/pixel.h"
 
-#include "para/para.h"
 #include "stereo.h"
 
 typedef struct {

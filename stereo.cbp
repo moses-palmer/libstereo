@@ -37,6 +37,10 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="../libpara" />
+		</Compiler>
+		<Unit filename="README" />
 		<Unit filename="effect.h" />
 		<Unit filename="effect/effect.c">
 			<Option compilerVar="CC" />
@@ -47,13 +51,6 @@
 		<Unit filename="effect/wave.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="para/para-linux.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="para/para.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="para/para.h" />
 		<Unit filename="pattern.h" />
 		<Unit filename="pattern/pattern-png.c">
 			<Option compilerVar="CC" />

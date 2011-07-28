@@ -49,7 +49,7 @@
 #ifndef PRIVATE_EFFECT_H
 #define PRIVATE_EFFECT_H
 
-#include "../para/para.h"
+#include <para/para.h>
 
 /**
  * The header that must be specified as the first field in an effect.
